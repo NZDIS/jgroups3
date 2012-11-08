@@ -311,6 +311,8 @@ public class JDBC_PING extends FILE_PING {
     }
     
     protected DataSource getDataSourceFromJNDI(String name) {
+    	// TODO fix this - diabled by Nathan to run on android
+    	/*
         final DataSource dataSource;
         InitialContext ctx = null;
         try {
@@ -341,7 +343,8 @@ public class JDBC_PING extends FILE_PING {
                     log.warn("Failed to close naming context.", e);
                 }
             }
-        }
+        }*/
+    	return null;
     }
     
     protected void verifyconfigurationParameters() {

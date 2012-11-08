@@ -97,14 +97,14 @@ public class ResourceManager {
         }
 	}
 
-	public static String getUniqueClusterName(String base_name) {
+/*	public static String getUniqueClusterName(String base_name) {
 		return base_name != null ? base_name + "-" + new UID().toString()
 				: new UID().toString();
 	}
 
 	public static String getUniqueClusterName() {
 		return getUniqueClusterName(null);
-	}
+	}*/
 
 	public static void main(String[] args) throws Exception {
 		List<Short> ports = getNextTcpPorts(InetAddress.getByName("192.168.1.5"), 15);
