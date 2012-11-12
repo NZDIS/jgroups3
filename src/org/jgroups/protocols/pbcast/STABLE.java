@@ -11,7 +11,7 @@ import org.jgroups.util.Util;
 
 import java.io.DataInput;
 import java.io.DataOutput;
-import java.lang.management.ManagementFactory;
+//import java.lang.management.ManagementFactory;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -350,7 +350,8 @@ public class STABLE extends Protocol {
             mbrs.clear();
             mbrs.addAll(tmp);
         }
-        lock.lock();
+        // Disabled by Nathan for android compatibility
+        /*lock.lock();
         try {
             resetDigest();
             if(!initialized)
@@ -366,7 +367,7 @@ public class STABLE extends Protocol {
         }
         finally {
             lock.unlock();
-        }
+        }*/
     }
 
 

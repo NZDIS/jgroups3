@@ -3,8 +3,6 @@ package org.jgroups.protocols;
 import org.jgroups.Address;
 import org.jgroups.annotations.Property;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;

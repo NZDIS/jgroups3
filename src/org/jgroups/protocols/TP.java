@@ -17,7 +17,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InterruptedIOException;
-import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.text.NumberFormat;
@@ -816,11 +815,6 @@ public abstract class TP extends Protocol {
     @ManagedAttribute(description="Number of threads currently in the pool")
     public int getTimerThreads() {
         return timer.getCurrentThreads();
-    }
-
-    @ManagedAttribute(description="Returns the number of live threads in the JVM")
-    public static int getNumThreads() {
-        return ManagementFactory.getThreadMXBean().getThreadCount();
     }
 
     public void setRegularRejectionPolicy(String rejection_policy) {

@@ -6,13 +6,11 @@ import org.jgroups.protocols.PingData;
 import org.jgroups.annotations.ManagedAttribute;
 import org.jgroups.annotations.ManagedOperation;
 import org.jgroups.annotations.Property;
-import org.jgroups.jmx.JmxConfigurator;
 import org.jgroups.logging.Log;
 import org.jgroups.logging.LogFactory;
 import org.jgroups.util.*;
 import org.jgroups.util.UUID;
 
-import javax.management.MBeanServer;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -109,9 +107,7 @@ public class GossipRouter {
 
     protected final Log log=LogFactory.getLog(this.getClass());
 
-    private boolean jmx=false;
-
-    private boolean registered=false;
+    //private boolean registered=false;
 
     public GossipRouter() {
         this(PORT);
@@ -122,17 +118,12 @@ public class GossipRouter {
     }
 
     public GossipRouter(int port, String bindAddressString) {
-        this(port,bindAddressString,false,0);
+        this(port,bindAddressString,0);
     }
 
-    public GossipRouter(int port, String bindAddressString, boolean jmx) {
-        this(port, bindAddressString,jmx,0);    
-    }
-    
-    public GossipRouter(int port, String bindAddressString, boolean jmx, long expiryTime) {
+    public GossipRouter(int port, String bindAddressString, long expiryTime) {
         this.port = port;
         this.bindAddressString = bindAddressString;
-        this.jmx = jmx;
         this.expiryTime = expiryTime;
         this.connectionTearListeners.add(new FailureDetectionListener());
     }
@@ -240,12 +231,6 @@ public class GossipRouter {
             + "the managed attributes have already been set. Brings the Router into a fully functional state.")
     public void start() throws Exception {
         if(running.compareAndSet(false, true)) {           
-            if(jmx && !registered) {
-                MBeanServer server=Util.getMBeanServer();
-                JmxConfigurator.register(this, server, "jgroups:name=GossipRouter");
-                registered=true;
-            }
-    
             if(bindAddressString != null) {
                 bindAddress=InetAddress.getByName(bindAddressString);
                 srvSock=new ServerSocket(port, backlog, bindAddress);
@@ -901,7 +886,6 @@ public class GossipRouter {
 
         GossipRouter router=null;
         String bind_addr=null;
-        boolean jmx=true;
 
         for(int i=0; i < args.length; i++) {
             String arg=args[i];
@@ -919,10 +903,6 @@ public class GossipRouter {
             }
             if("-expiry".equals(arg)) {
                 expiry_time=Long.parseLong(args[++i]);
-                continue;
-            }
-            if("-jmx".equals(arg)) {
-                jmx=Boolean.valueOf(args[++i]);
                 continue;
             }
             // this option is not used and should be deprecated/removed in a future release
@@ -951,7 +931,7 @@ public class GossipRouter {
         System.out.println("GossipRouter is starting. CTRL-C to exit JVM");
 
         try {
-            router=new GossipRouter(port, bind_addr, jmx);
+            router=new GossipRouter(port, bind_addr);
 
             if(backlog > 0)
                 router.setBacklog(backlog);

@@ -8,7 +8,6 @@ import org.jgroups.annotations.ManagedAttribute;
 import org.jgroups.annotations.ManagedOperation;
 import org.jgroups.annotations.Property;
 import org.jgroups.conf.ClassConfigurator;
-import org.jgroups.jmx.ResourceDMBean;
 import org.jgroups.logging.Log;
 import org.jgroups.logging.LogFactory;
 import org.jgroups.protocols.TP;
@@ -232,6 +231,8 @@ public abstract class Protocol {
                         }
                     }
                     else if(method_name.startsWith("set")) {
+                    	System.out.println("Disabled by Nathan for android compatibility");
+                    	/*
                         String stem=method_name.substring(3);
                         Method getter=ResourceDMBean.findGetter(getClass(), stem);
                         if(getter != null) {
@@ -243,7 +244,7 @@ public abstract class Protocol {
                             catch(Exception e) {
                                 log.warn("Could not retrieve value of attribute (method) " + method_name, e);
                             }
-                        }
+                        }*/
                     }
                 }
             }

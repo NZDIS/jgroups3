@@ -4,12 +4,10 @@ package org.jgroups.blocks;
 
 import org.jgroups.*;
 import org.jgroups.annotations.Unsupported;
-import org.jgroups.jmx.JmxConfigurator;
 import org.jgroups.logging.Log;
 import org.jgroups.logging.LogFactory;
 import org.jgroups.util.Util;
 
-import javax.management.MBeanServer;
 import java.io.*;
 import java.util.*;
 
@@ -32,7 +30,6 @@ public class ReplicatedTree extends ReceiverAdapter {
     String groupname="ReplicatedTree-Group";
     final List<Address> members=new ArrayList<Address>();
     long state_fetch_timeout=10000;
-    boolean jmx=false;
 
     protected final Log log=LogFactory.getLog(this.getClass());
 
@@ -73,26 +70,6 @@ public class ReplicatedTree extends ReceiverAdapter {
         channel=new JChannel(this.props);
         channel.setReceiver(this);
         channel.connect(this.groupname);
-        start();
-    }
-
-    public ReplicatedTree(String groupname, String props, long state_fetch_timeout, boolean jmx) throws Exception {
-        if(groupname != null)
-            this.groupname=groupname;
-        if(props != null)
-            this.props=props;
-        this.jmx=jmx;
-        this.state_fetch_timeout=state_fetch_timeout;
-        channel=new JChannel(this.props);
-        channel.setReceiver(this);
-        channel.connect(this.groupname);
-
-        if(jmx) {
-            MBeanServer server=Util.getMBeanServer();
-            if(server == null)
-                throw new Exception("No MBeanServers found; need to run with an MBeanServer present, or inside JDK 5");
-            JmxConfigurator.registerChannel(channel, server, "jgroups", channel.getClusterName() , true);
-        }
         start();
     }
 

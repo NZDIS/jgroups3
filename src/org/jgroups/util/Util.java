@@ -5,7 +5,6 @@ import org.jgroups.TimeoutException;
 import org.jgroups.auth.AuthToken;
 import org.jgroups.blocks.Connection;
 import org.jgroups.conf.ClassConfigurator;
-import org.jgroups.jmx.JmxConfigurator;
 import org.jgroups.logging.Log;
 import org.jgroups.protocols.*;
 import org.jgroups.protocols.pbcast.FLUSH;
@@ -16,13 +15,11 @@ import org.jgroups.stack.IpAddress;
 import org.jgroups.stack.Protocol;
 import org.jgroups.stack.ProtocolStack;
 
-import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
 import java.io.*;
 import java.lang.annotation.Annotation;
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadInfo;
-import java.lang.management.ThreadMXBean;
+//import java.lang.management.ManagementFactory;
+//import java.lang.management.ThreadInfo;
+//import java.lang.management.ThreadMXBean;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -88,12 +85,7 @@ public class Util {
     private static StackType ip_stack_type=_getIpStackType();
 
 
-    protected static ResourceBundle resource_bundle;
-
-
     static {
-        resource_bundle=ResourceBundle.getBundle("jg-messages",Locale.getDefault(),Util.class.getClassLoader());
-
         /* Trying to get value of resolve_dns. PropertyPermission not granted if
         * running in an untrusted environment with JNLP */
         try {
@@ -212,7 +204,37 @@ public class Util {
     }
 
     public static String getMessage(String key) {
-        return key != null? resource_bundle.getString(key) : null;
+    	if (key.equals("ConfigurationError")) 
+    		return "[JGRP00001] configuration error: the following properties in {0} are not recognized: {1}";
+    	if (key.equals("ProtocolLoadError")) 
+    		return "[JGRP00002] unable to load protocol {0} (either with relative - {0} - or absolute - {1} - class name)";
+    	if (key.equals("FileNotFound")) 
+    		return "[JGRP00003] file \"{0}\" not found";
+    	if (key.equals("ParseError")) 
+    		return "[JGRP00004] parsing failure; the XML document is not correct: {0}";
+    	if (key.equals("ProtocolCreateError")) 
+    		return "[JGRP00005] failure creating protocol {0}: {1}";
+    	if (key.equals("AcceptError")) 
+    		return "[JGRP00006] failed accepting connection from peer: {0}";
+    	if (key.equals("AttrReadFailure")) 
+    		return "[JGRP00007] failed reading value of attribute {0}: {1}";
+    	if (key.equals("MissingAttribute")) 
+    		return "[JGRP00008] did not find attribute with name {0}";
+    	if (key.equals("AttrWriteFailure")) 
+    		return "[JGRP00009] failed writing to attribute {0}: {1}";
+    	if (key.equals("VersionMismatch")) 
+    		return "[JGRP00010] packet from {0} has different version ({1}) than ours ({2}); packet is discarded";
+    	if (key.equals("MsgDroppedNak")) 
+    		return "[JGRP00011] {0}: dropped message {1} from non-member {2} (view={3})";
+    	if (key.equals("MsgDroppedDiffCluster")) 
+    		return "[JGRP00012] discarded message from different cluster {0} (our cluster is {1}). Sender was {2}";
+    	if (key.equals("SuppressMsg")) 
+    		return "(received {0} identical messages from {1} in the last {2} ms)";
+    	if (key.equals("Deprecated")) 
+    		return "[JGRP00013] {0} has been deprecated: {1}";
+    	if (key.equals("IncorrectBufferSize")) 
+    		return "[JGRP00014] the {0} buffer of socket {1} was set to {2}, but the OS only allocated {3}. This might lead to performance problems. Please set your max {4} buffer in the OS correctly (e.g. {5} on Linux)";
+        return null;
     }
 
     public static String getMessage(String key, Object ... args) {
@@ -1462,7 +1484,9 @@ public class Util {
 
 
 
+    
     public static String dumpThreads() {
+    	/* Disabled by Nathan to enable android compatibility
         StringBuilder sb=new StringBuilder();
         ThreadMXBean bean=ManagementFactory.getThreadMXBean();
         long[] ids=bean.getAllThreadIds();
@@ -1478,10 +1502,12 @@ public class Util {
             sb.append("monitor deadlocked threads:\n");
             _printThreads(bean, deadlocks, sb);
         }
-        return sb.toString();
+        return sb.toString();*/
+    	return null;
     }
 
 
+    /* Disabled by Nathan to enable android compatibility
     protected static void _printThreads(ThreadMXBean bean, long[] ids, StringBuilder sb) {
         ThreadInfo[] threads=bean.getThreadInfo(ids, 20);
         for(int i=0; i < threads.length; i++) {
@@ -1498,7 +1524,7 @@ public class Util {
             }
             sb.append("\n\n");
         }
-    }
+    }*/
 
 
     public static boolean interruptAndWaitToDie(Thread t) {
@@ -3959,6 +3985,7 @@ public class Util {
         return !mbrs.isEmpty()? mbrs.get(0) : null;
     }
 
+    /* Disable by Nathan for android compatibility
     public static MBeanServer getMBeanServer() {
 		ArrayList servers = MBeanServerFactory.findMBeanServer(null);
 		if (servers != null && !servers.isEmpty()) {
@@ -3976,10 +4003,12 @@ public class Util {
 			//if it all fails, create a default
 			return MBeanServerFactory.createMBeanServer();
 		}
-	}
+	}*/
 
 
     public static void registerChannel(JChannel channel, String name) {
+    	System.err.println("Disable by Nathan for android compatibility");
+    	/*
         MBeanServer server=Util.getMBeanServer();
         if(server != null) {
             try {
@@ -3992,7 +4021,7 @@ public class Util {
             catch(Exception e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
 
