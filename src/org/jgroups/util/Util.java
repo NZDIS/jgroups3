@@ -3662,7 +3662,11 @@ public class Util {
 
 
     public static boolean checkForLinux() {
-        return checkForPresence("os.name", "linux");
+        return (checkForPresence("os.name", "linux") & !System.getProperty("java.vm.name").startsWith("Dalvik"));
+    }
+
+    public static boolean checkForAndroid() {
+        return (checkForPresence("os.name", "linux") & System.getProperty("java.vm.name").startsWith("Dalvik"));
     }
 
     public static boolean checkForHp() {

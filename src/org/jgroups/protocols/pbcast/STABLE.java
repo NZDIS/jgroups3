@@ -350,24 +350,25 @@ public class STABLE extends Protocol {
             mbrs.clear();
             mbrs.addAll(tmp);
         }
-        // Disabled by Nathan for android compatibility
-        /*lock.lock();
+        lock.lock();
         try {
             resetDigest();
             if(!initialized)
                 initialized=true;
 
             if(ergonomics && cap > 0) {
-                long max_heap=(long)(ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getMax() * cap);
+                // Disabled by Nathan for android compatibility
+                //long max_heap=(long)(ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getMax() * cap);
                 long new_size=tmp.size() * original_max_bytes;
-                max_bytes=Math.min(max_heap, new_size);
+                //max_bytes=Math.min(max_heap, new_size);
+                max_bytes=new_size;
                 if(log.isDebugEnabled())
                     log.debug("[ergonomics] setting max_bytes to " + Util.printBytes(max_bytes) + " (" + tmp.size() + " members)");
             }
         }
         finally {
             lock.unlock();
-        }*/
+        }
     }
 
 
